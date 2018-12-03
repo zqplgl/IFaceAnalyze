@@ -91,20 +91,14 @@ Mat FaceAnalyze::get_align_face(const Mat &im, const BoundingBox &faceinfo,int &
     int pad_h = h * pad_scale;
 
     int x1 = faceinfo.x1 - pad_w;
-    if(x1<0)
-        x1 = 0;
-
     int y1 = faceinfo.y1 - pad_h;
-    if(y1<0)
-        y1 = 0;
-
     int x2 = faceinfo.x2 + pad_w;
-    if(x2>=im.cols)
-        x2 = im.cols -1;
-
     int y2 = faceinfo.y2 + pad_h;
-    if(y2>=im.rows)
-        y2 = im.rows -1;
+
+    if(x1<0) x1 = 0;
+    if(y1<0) y1 = 0;
+    if(x2>=im.cols) x2 = im.cols -1;
+    if(y2>=im.rows) y2 = im.rows -1;
 
     Mat face = im(Rect(x1,y1,x2-x1,y2-y1)).clone();
 
@@ -127,6 +121,11 @@ Mat FaceAnalyze::get_align_face(const Mat &im, const BoundingBox &faceinfo,int &
     y1 = faceinfos[0].y1;
     x2 = faceinfos[0].x2;
     y2 = faceinfos[0].x2;
+
+    if(x1<0) x1 = 0;
+    if(y1<0) y1 = 0;
+    if(x2>=face_align.cols) x2 = face_align.cols -1;
+    if(y2>=face_align.rows) y2 = face_align.rows -1;
 
     return face_align(Rect(x1,y1,x2-x1,y2-y1)).clone();
 }
@@ -179,7 +178,9 @@ void FaceAnalyze::process()
                 BoundingBox faceinfo = getFaceInfo(faceinfos,rect);
 
                 int flag1 = 0;
+                cout<<"face_align before************************"<<frame_index<<endl;
                 Mat face_align = get_align_face(frame,faceinfo,flag1);
+                cout<<"face_align after************************"<<frame_index<<endl;
                 if(flag1)
                     continue;
 
